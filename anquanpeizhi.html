@@ -1,0 +1,22 @@
+<html>
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>安全配置</title>
+
+    </head>
+  
+    <body>
+      1.应用之申请自己使用的权限，避免引起用户的不满。
+      2.应用不能使用system，radio等系统权限用户运行。
+        cd 到data/data目录 ls -l | grep packagename,普通用户一般以u0开头
+      3.不同应用程序不要设置相同的UID，检查用户的manifest是否设置android：sharedUserId。android:sharedUserId=android.uid.system,android:sharedUserId=android.uid.shared,android:sharedUserId=android.shared
+      4.
+        
+
+    
+
+    </body>
+    
+</html>
