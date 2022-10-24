@@ -1,5 +1,8 @@
 
 
+
+
+
 <html>
 
     <head>
@@ -14,7 +17,11 @@
      <h1>静态广播测试</h1>
        <h2>可以通过manifest文件或者工具找到暴露的静态Receiver,检查这些组件是否有足够的权限保护，权限级别是signature或者signatureOrSystem，如果权限级别足够，一般无需进行下面的测试
 ，如果权限不够或者没有权限，先判断Receiver中的inter-filter中的action是否都是受保护的action，如果是受保护的action，一般无需进行下面的测试，如果不是受保护的action，需要分析代码中的Receiver组件对应的intent接收处理函数（onReceiver、getIntent等），分析代码中是否存在敏感操作，是否传递了敏感数据，敏感数据需要加密，还有对intent的处理逻辑是否有漏洞</h2>
-    </body>
+     <h1>动态广播测试</h1>
+       <h2>搜索关键字registerReceiver，如果对象是Local broadcast.getInstance(content),
+说明是本地广播，只有应用内部可以调用，无风险，查看regiserReceiver的参数，如果是两个参数说明没有权限控制，需要查看第二个参数的action是否是系统保护的action，如果是一般无需进行下面的分析，如果不是，则需要接着分析，检查这个Receiver类
+的onreceiver</h2>
+  </body>
     
 </html>
 
