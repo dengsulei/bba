@@ -20,8 +20,11 @@
      <h1>动态广播测试</h1>
        <h2>搜索关键字registerReceiver，如果对象是Local broadcast.getInstance(content),
 说明是本地广播，只有应用内部可以调用，无风险，查看regiserReceiver的参数，如果是两个参数说明没有权限控制，需要查看第二个参数的action是否是系统保护的action，如果是一般无需进行下面的分析，如果不是，则需要接着分析，检查这个Receiver类
-的onreceiver</h2>
-  </body>
+的onreceiver函数，分析代码代码实现，检查这个函数中对Intent的处理是否有风险，是否存在敏感操作，判断是否可以被提权，泄露隐私，现成应用崩溃。如果是4个参数，第三个参数是权限控制参数，如果权限级别足够一般无问题，如果是normal或者dangerous，按照两个参数处理</h2>
+     <h1>Receiver嗅探</h1>
+       <h2>整个工程搜索sendBroadcast，sendBroadcastAsUser，sendOrderedBroadcast，sendStickyBroadcast，sendStickyOrderedBroadcast方法，查看Intent参数，查看其是否指定class或者使用setClass，setComponent，setPackage
+setComponentName，setClassName等方法，没有就进行下一步，看sendBroadcast的第二个参数有没有设置权限，只有指定权限的应用才能被接收，或者指定一个receiver接收，如果权限级别不够，也没有指定receiver接收，这个广播可以被外部程序劫持</h2>
+ </body>
     
 </html>
 
