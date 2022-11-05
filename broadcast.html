@@ -16,14 +16,23 @@
     <body>
      <h1>静态广播测试</h1>
        <h2>可以通过manifest文件或者工具找到暴露的静态Receiver,检查这些组件是否有足够的权限保护，权限级别是signature或者signatureOrSystem，如果权限级别足够，一般无需进行下面的测试
-，如果权限不够或者没有权限，先判断Receiver中的inter-filter中的action是否都是受保护的action，如果是受保护的action，一般无需进行下面的测试，如果不是受保护的action，需要分析代码中的Receiver组件对应的intent接收处理函数（onReceiver、getIntent等），分析代码中是否存在敏感操作，是否传递了敏感数据，敏感数据需要加密，还有对intent的处理逻辑是否有漏洞</h2>
+            ，如果权限不够或者没有权限，先判断Receiver中的inter-filter中的action是否都是受保护的action，如果是受保护的action，一般无需进行下面的测试，如果不是受保护的action，需要分析代码中的
+           Receiver组件对应的intent接收处理函数（onReceiver、getIntent等），分析代码中是否存在敏感操作，是否传递了敏感数据，敏感数据需要加密，还有对intent的处理逻辑是否有漏洞</h2>
      <h1>动态广播测试</h1>
        <h2>搜索关键字registerReceiver，如果对象是Local broadcast.getInstance(content),
-说明是本地广播，只有应用内部可以调用，无风险，查看regiserReceiver的参数，如果是两个参数说明没有权限控制，需要查看第二个参数的action是否是系统保护的action，如果是一般无需进行下面的分析，如果不是，则需要接着分析，检查这个Receiver类
-的onreceiver函数，分析代码代码实现，检查这个函数中对Intent的处理是否有风险，是否存在敏感操作，判断是否可以被提权，泄露隐私，现成应用崩溃。如果是4个参数，第三个参数是权限控制参数，如果权限级别足够一般无问题，如果是normal或者dangerous，按照两个参数处理</h2>
+            说明是本地广播，只有应用内部可以调用，无风险，查看regiserReceiver的参数，如果是两个参数说明没有权限控制，需要查看第二个参数的action是否是系统保护的action，如果是一般无需进
+           行下面的分析，如果不是，则需要接着分析，检查这个Receiver类的onreceiver函数，分析代码代码实现，检查这个函数中对Intent的处理是否有风险，是否存在敏感操作，判断是否可以被提权，
+           泄露隐私，现成应用崩溃。如果是4个参数，第三个参数是权限控制参数，如果权限级别足够一般无问题，如果是normal或者dangerous，按照两个参数处理</h2>
      <h1>Receiver嗅探</h1>
-       <h2>整个工程搜索sendBroadcast，sendBroadcastAsUser，sendOrderedBroadcast，sendStickyBroadcast，sendStickyOrderedBroadcast方法，查看Intent参数，查看其是否指定class或者使用setClass，setComponent，setPackage
-setComponentName，setClassName等方法，没有就进行下一步，看sendBroadcast的第二个参数有没有设置权限，只有指定权限的应用才能被接收，或者指定一个receiver接收，如果权限级别不够，也没有指定receiver接收，这个广播可以被外部程序劫持</h2>
+       <h2>整个工程搜索sendBroadcast，sendBroadcastAsUser，sendOrderedBroadcast，sendStickyBroadcast，sendStickyOrderedBroadcast方法，查看Intent参数，查看其是否指定class或者使
+           用setClass，setComponent，setPackage，setComponentName，setClassName等方法，没有就进行下一步，看sendBroadcast的第二个参数有没有设置权限，只有指定权限的应用才能被接收
+           ，或者指定一个receiver接收，如果权限级别不够，也没有指定receiver接收，这个广播可以被外部程序劫持</h2>
+     <h1>禁止StickyBroadcast发送敏感数据</h1>   
+        <h2>从API Level 21之后，就被弃用了,原因是因为这一系列函数簇没有安全性，每个用户都可以访问，每个用户都可以修改，有很大的安全风险。所以官方禁用掉了，推荐使用其他的机制来替代这种方案。
+        如果应用存在，检查intent是否携带敏感数据，则需要指定receiver权限（权限不能是normal或者dangerous），建议使用其他机制来代替</h2>
+        <h1>Broadcast Receiver必须分开处理系统广播和应用广播</h1>
+        <h2>检查manifest文件中的所有receiver中的inter-filter中是否存在系统action和自定义action，如果系统广播和自定义广播中系统广播设计敏感数据，恶意应用只需要注册自定义广播就可以触发广播
+        处理操作，造成广播混淆攻击</h2>
  </body>
     
 </html>
